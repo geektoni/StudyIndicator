@@ -12,10 +12,11 @@ from IndicatorController import IndicatorController
 class Indicator(AppIndicator3.Indicator):
     """Contains method to generate the indicator and the menu"""
 
-    def __init__(self, arg):
+    def __init__(self):
         """Initialize the indicator and build the menu"""
         self.APPID = "Study Timer Indicator"
-        self.new(self.APPID, AppIndicator3.IndicatorCategory.SYSTEM_SERVICES)
+        self.ICON = os.path.abspath('time51.svg')
+        self.new(self.APPID, 'none', AppIndicator3.IndicatorCategory.SYSTEM_SERVICES)
         self.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.controller = IndicatorController()
         self.menu = Gtk.Menu()
@@ -28,7 +29,7 @@ class Indicator(AppIndicator3.Indicator):
         """Build the indicator menu and connect it to the application controller"""
 
         # Initialize all menu entries
-        start_phase= Gtk.MenuItem("Start Pomodoro")
+        start_phase= Gtk.MenuItem("Start Phase")
         start_break = Gtk.MenuItem("Start Break")
         start_long_break = Gtk.MenuItem("Start Long Break")
         start_session = Gtk.MenuItem("Start Session")
@@ -36,11 +37,11 @@ class Indicator(AppIndicator3.Indicator):
         quit = Gtk.MenuItem("Quit")
 
         # Connect everything to the controller
-        start_phase.connect('activate', self.controller.startPomodoro, self)
+        start_phase.connect('activate', self.controller.startPhase, self)
         start_break.connect('activate', self.controller.startBreak, self)
-        start_long_break.connect('activate', self.controller.startLongBreak, self)
-        start_session.connect('activate', self.controller.startSession)
-        start_settings.connect('activate', self.controller.startSettings, self)
+        start_long_break.connect('activate', self.controller.startBreak, self)
+        #start_session.connect('activate', None)
+        #start_settings.connect('activate', None)
         quit.connect('activate', self.quit)
 
         # Append all to the menu and show
