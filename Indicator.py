@@ -9,19 +9,19 @@ from gi.repository import Gtk
 # Controller
 from IndicatorController import IndicatorController
 
-class Indicator(AppIndicator3.Indicator):
+class Indicator(object):
     """Contains method to generate the indicator and the menu"""
 
     def __init__(self):
         """Initialize the indicator and build the menu"""
         self.APPID = "Study Timer Indicator"
-        self.ICON = os.path.abspath('time51.svg')
-        self.new(self.APPID, 'none', AppIndicator3.IndicatorCategory.SYSTEM_SERVICES)
-        self.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
+        self.ICON = os.path.abspath('stopwatch2.svg')
+        self.view = AppIndicator3.Indicator.new(self.APPID, self.ICON, AppIndicator3.IndicatorCategory.SYSTEM_SERVICES)
+        self.view.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.controller = IndicatorController()
         self.menu = Gtk.Menu()
         self.generateMenu()
-        self.set_menu(self.menu)
+        self.view.set_menu(self.menu)
         Notify.init(self.APPID)
         Gtk.main()
 
