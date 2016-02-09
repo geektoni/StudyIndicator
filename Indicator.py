@@ -52,7 +52,7 @@ class Indicator(object):
         # Append all to the menu and show
         self.menu.append(start_phase)
         self.menu.append(start_break)
-        self.menu.append(start_long_break)
+        #self.menu.append(start_long_break)
         self.menu.append(start_session)
         self.menu.append(start_settings)
         self.menu.append(quit)
