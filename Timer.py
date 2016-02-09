@@ -6,6 +6,9 @@ class Timer(object):
 
     def __init__(self):
         self.startTime = 0
+        self.MAXPHASEDURATION = 60
+        self.MAXBREAKDURATION = 30
+        self.MAXSESSIONDURATION = 10
         self.phaseDuration = 25
         self.breakDuration = 5
         self.sessionDuration = 4
@@ -27,6 +30,15 @@ class Timer(object):
 
     def getSessionDuration(self):
         return self.sessionDuration
+
+    def getMAXPHASEDURATION(self):
+        return self.MAXPHASEDURATION
+
+    def getMAXBREAKDURATION(self):
+        return self.MAXBREAKDURATION
+
+    def getMAXSESSIONDURATION(self):
+        return self.MAXSESSIONDURATION
 
     def setStartTime(self):
         self.startTime = time.mktime(time.localtime(time.time()))
