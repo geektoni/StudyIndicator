@@ -18,13 +18,18 @@ class Indicator(object):
         self.ICON = os.path.abspath('stopwatch2.svg')
         self.view = AppIndicator3.Indicator.new(self.APPID, self.ICON, AppIndicator3.IndicatorCategory.SYSTEM_SERVICES)
         self.view.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
-        self.controller = IndicatorController()
+        self.controller = IndicatorController(self)
         self.menu = Gtk.Menu()
         self.generateMenu()
         self.view.set_menu(self.menu)
         Notify.init(self.APPID)
         Gtk.main()
 
+    # Return the indicator View (AppIndicator3.Indicator)
+    def getView(self):
+        return self.view
+
+    # Generate the indicator menu
     def generateMenu(self):
         """Build the indicator menu and connect it to the application controller"""
 
@@ -37,7 +42,7 @@ class Indicator(object):
         quit = Gtk.MenuItem("Quit")
 
         # Connect everything to the controller
-        start_phase.connect('activate', self.controller.startPhase, self)
+        start_phase.connect('activate', self.controller.startPhase)
         start_break.connect('activate', self.controller.startBreak, self)
         start_long_break.connect('activate', self.controller.startBreak, self)
         #start_session.connect('activate', None)
@@ -59,11 +64,26 @@ class Indicator(object):
     def disableMenuItem(self, item):
         item.set_sensitive(False)
 
+    # Disable all indicator menu items apart from the selected one
+    def disableMenuItems(self, item):
+        for e in self.menu.get_children():
+            if (e != item and e.get_label() != 'Quit'):
+                e.set_sensitive(False)
+
+    # Enable all menu items
+    def enableMenuItems(self):
+        for e in self.menu.get_children():
+            e.set_sensitive(True)
+
     def startSettings(self):
         pass
 
     def playSound(self, sound):
         pass
+
+    # Change the indicator label (only for timer)
+    def changeLabel(self, minute, seconds):
+        self.view.set_label(minute+":"+seconds, "")
 
     def quit(self, trigger):
         """Quit the application and close everything"""

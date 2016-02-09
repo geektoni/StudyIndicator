@@ -10,28 +10,28 @@ class Timer(object):
         self.breakDuration = 5
         self.sessionDuration = self.phaseDuration*4+self.breakDuration*4
 
-    def setPhaseDuration(duration):
+    def setPhaseDuration(self, duration):
         self.phaseDuration = duration
 
-    def getPhaseDuration():
+    def getPhaseDuration(self):
         return self.phaseDuration
 
-    def setBreakDuration(duration):
+    def setBreakDuration(self, duration):
         self.breakDuration = duration
 
-    def getBreakDuration():
+    def getBreakDuration(self):
         return self.breakDuration
 
-    def setSessionDuration(duration):
+    def setSessionDuration(self, duration):
         self.sessionDuration = duration
 
-    def getSessionDuration():
+    def getSessionDuration(self):
         return self.sessionDuration
 
-    def setStartTime():
+    def setStartTime(self):
         self.startTime = time.mktime(time.localtime(time.time()))
 
-    def getElapsedTime():
+    def getElapsedTime(self):
         seconds = int(time.mktime(time.localtime(time.time())) - self.startTime)
         minutes = int(seconds/60)
         return (minutes, seconds)
