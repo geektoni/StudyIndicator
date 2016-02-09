@@ -15,7 +15,7 @@ class Settings(Gtk.Window):
         # Initialize the window and set the border width
         Gtk.Window.__init__(self, title="Settings")
         self.set_border_width(10)
-        #self.set_default_icon_from_file("tomato.svg")
+        self.set_default_icon_from_file("stopwatch2.png")
 
         # Set up the listbox with all the elements needed
         self.listBox = Gtk.ListBox()
