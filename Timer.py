@@ -29,7 +29,7 @@ class Timer(object):
         return self.sessionDuration
 
     def setStartTime():
-        self.startTimer = time.mktime(time.localtime(time.time())
+        self.startTime = time.mktime(time.localtime(time.time()))
 
     def getElapsedTime():
         seconds = int(time.mktime(time.localtime(time.time())) - self.startTime)
