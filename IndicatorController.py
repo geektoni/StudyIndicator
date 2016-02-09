@@ -38,12 +38,28 @@ class IndicatorController(object):
             self.indicator.getView().set_label("", "")
             GObject.source_remove(self.eventSource)
 
-    def startBreak(self, trigger, duration):
-        pass
+    # Start break phase. It is the same of startPhase
+    def startBreak(self, trigger):
+        trigger.set_label("Stop Break")
+        trigger.disconnect_by_func(self.startBreak)
+        trigger.connect('activate', self.stopBreak)
+        self.indicator.disableMenuItems(trigger)
+        self.timer.setStartTime()
+        self.eventSource = GObject.timeout_add(1000, self.labelChanger, self.timer.getBreakDuration())
 
+    # Stop break phase. It is the same of stopPhase
     def stopBreak(self, trigger):
-        pass
+        trigger.set_label("Start Break")
+        trigger.disconnect_by_func(self.stopBreak)
+        trigger.connect('activate', self.startBreak)
+        self.indicator.enableMenuItems()
+        if (self.eventSource != None):
+            self.indicator.getView().set_label("", "")
+            GObject.source_remove(self.eventSource)
 
+    # Start a work session, it is composed of some working phases
+    # an some break phases. For example, 3 working phases and 3
+    # break phases. 
     def startSession(self, trigger, duration):
         pass
 

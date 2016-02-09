@@ -43,8 +43,8 @@ class Indicator(object):
 
         # Connect everything to the controller
         start_phase.connect('activate', self.controller.startPhase)
-        start_break.connect('activate', self.controller.startBreak, self)
-        start_long_break.connect('activate', self.controller.startBreak, self)
+        start_break.connect('activate', self.controller.startBreak)
+        #start_long_break.connect('activate', self.controller.startBreak, self)
         #start_session.connect('activate', None)
         #start_settings.connect('activate', None)
         quit.connect('activate', self.quit)
