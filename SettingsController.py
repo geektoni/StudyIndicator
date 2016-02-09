@@ -11,7 +11,7 @@ class SettingsController(object):
             for box in row.get_children():
                 for e in box.get_children():
                     if e.__class__.__name__ == 'SpinButton':
-                        self.saveInto(e.get_value(), counter)
+                        self.saveInto(e.get_value_as_int(), counter)
                         counter +=1
 
     # Reset the previous data
@@ -21,7 +21,7 @@ class SettingsController(object):
             for box in row.get_children():
                 for e in box.get_children():
                     if e.__class__.__name__ == 'SpinButton':
-                        print(counter + self.getFrom(counter))
+                        e.set_value(self.getFrom(counter))
                         counter += 1
 
 
@@ -35,8 +35,9 @@ class SettingsController(object):
 
     def getFrom(self, id):
         if (id==0):
-            self.window.getModel().timer.getPhaseDuration()
+            return self.window.getModel().timer.getPhaseDuration()
         elif (id==1):
-            self.window.getModel().timer.getBreakDuration()
+            return self.window.getModel().timer.getBreakDuration()
         elif (id==2):
-            self.window.getModel().timer.getSessionDuration()
+            return self.window.getModel().timer.getSessionDuration()
+        return 0
