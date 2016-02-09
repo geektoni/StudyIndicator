@@ -59,12 +59,23 @@ class IndicatorController(object):
 
     # Start a work session, it is composed of some working phases
     # an some break phases. For example, 3 working phases and 3
-    # break phases. 
-    def startSession(self, trigger, duration):
-        pass
+    # break phases.
+    def startSession(self, trigger):
+        trigger.set_label("Stop Session")
+        trigger.disconnect_by_func(self.startSession)
+        trigger.connect('activate', self.stopSession)
+        self.indicator.disableMenuItems(trigger)
+        self.timer.setStartTime()
+        self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, self.timer.getPhaseDuration(), 0, self.timer.getSessionDuration())
 
     def stopSession(self, trigger):
-        pass
+        trigger.set_label("Start Session")
+        trigger.disconnect_by_func(self.stopSession)
+        trigger.connect('activate', self.startSession)
+        self.indicator.enableMenuItems()
+        if (self.eventSource != None):
+            self.indicator.getView().set_label("", "")
+            GObject.source_remove(self.eventSource)
 
     # This function change the label of the indicator, and it is used
     # inside a GObject loop. When the time arrive to a max, it will
@@ -72,6 +83,24 @@ class IndicatorController(object):
     def labelChanger(self, max):
         clock = self.timer.getElapsedTime()
         if (clock[0] == max):
+            return False
+        self.indicator.changeLabel(str(clock[0]), str(clock[1]%60))
+        return True
+
+    # This function is similar to labelChanger, but it is design specifically
+    # for the session operation. It will call continuously the same function
+    # as long as the counter is less than sessionDuration
+    def labelChangerSession(self, max, counter, maxCounter):
+        clock = self.timer.getElapsedTime()
+        if (counter==maxCounter):
+            return False
+        if (clock[0] == max and max == self.timer.getPhaseDuration()):
+            self.timer.setStartTime()
+            self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, self.timer.getBreakDuration(), counter+1, maxCounter)
+            return False
+        elif (clock[0] == max and max == self.timer.getBreakDuration()):
+            self.timer.setStartTime()
+            self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, self.timer.getPhaseDuration(), counter+1, maxCounter)
             return False
         self.indicator.changeLabel(str(clock[0]), str(clock[1]%60))
         return True

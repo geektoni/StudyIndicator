@@ -45,7 +45,7 @@ class Indicator(object):
         start_phase.connect('activate', self.controller.startPhase)
         start_break.connect('activate', self.controller.startBreak)
         #start_long_break.connect('activate', self.controller.startBreak, self)
-        #start_session.connect('activate', None)
+        start_session.connect('activate', self.controller.startSession)
         #start_settings.connect('activate', None)
         quit.connect('activate', self.quit)
 

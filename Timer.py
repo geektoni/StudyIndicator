@@ -6,9 +6,9 @@ class Timer(object):
 
     def __init__(self):
         self.startTime = 0
-        self.phaseDuration = 25
-        self.breakDuration = 5
-        self.sessionDuration = self.phaseDuration*4+self.breakDuration*4
+        self.phaseDuration = 2
+        self.breakDuration = 1
+        self.sessionDuration = 4
 
     def setPhaseDuration(self, duration):
         self.phaseDuration = duration
