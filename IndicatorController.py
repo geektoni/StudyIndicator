@@ -88,7 +88,20 @@ class IndicatorController(object):
         if (clock[0] == max):
             self.indicator.throwNotification(message)
             return False
-        self.indicator.changeLabel(str(clock[0]), str(clock[1]%60))
+
+        minutes = ""
+        if (clock[0] < 10):
+            minutes = "0"+str(clock[0])
+        else:
+            minutes = str(clock[0])
+
+        seconds = ""
+        if (clock[1]%60 < 10):
+            seconds = "0"+str(clock[1]%60)
+        else:
+            seconds = str(clock[1]%60)
+
+        self.indicator.changeLabel(minutes, seconds)
         return True
 
     # This function is similar to labelChanger, but it is design specifically
@@ -108,5 +121,17 @@ class IndicatorController(object):
             self.timer.setStartTime()
             self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, self.timer.getPhaseDuration(), counter+1, maxCounter)
             return False
-        self.indicator.changeLabel(str(clock[0]), str(clock[1]%60))
+        minutes = ""
+        if (clock[0] < 10):
+            minutes = "0"+str(clock[0])
+        else:
+            minutes = str(clock[0])
+
+        seconds = ""
+        if (clock[1]%60 < 10):
+            seconds = "0"+str(clock[0]%60)
+        else:
+            seconds = str(clock[1]%60)
+
+        self.indicator.changeLabel(minutes, seconds)
         return True
