@@ -89,6 +89,10 @@ class Indicator(object):
     def changeLabel(self, minute, seconds):
         self.view.set_label(minute+":"+seconds, "")
 
+    # Throw a Notification
+    def throwNotification(self, text):
+        Notify.Notification.new("<b>Study Indicator</b>", text ,self.ICON).show()
+
     def quit(self, trigger):
         """Quit the application and close everything"""
         Notify.uninit()
