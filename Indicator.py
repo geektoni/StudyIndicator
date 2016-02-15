@@ -6,6 +6,10 @@ from gi.repository import AppIndicator3
 from gi.repository import Notify
 from gi.repository import Gtk
 
+# Audio library
+import pyaudio
+import wave
+
 # Controller
 from IndicatorController import IndicatorController
 
@@ -19,6 +23,7 @@ class Indicator(object):
         """Initialize the indicator and build the menu"""
         self.APPID = "Study Timer Indicator"
         self.ICON = os.path.abspath('stopwatch2.png')
+        self.SOUND = "Sound.wav"
         self.view = AppIndicator3.Indicator.new(self.APPID, self.ICON, AppIndicator3.IndicatorCategory.SYSTEM_SERVICES)
         self.view.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.controller = IndicatorController(self)
@@ -93,7 +98,25 @@ class Indicator(object):
     def throwNotification(self, text):
         Notify.Notification.new("<b>Study Indicator</b>", text ,self.ICON).show()
 
+    # Quit the application
     def quit(self, trigger):
         """Quit the application and close everything"""
         Notify.uninit()
         Gtk.main_quit()
+
+    # Play a sound
+    def playSound(self):
+        """Play a sound"""
+        CHUNK = 1024
+        wf = wave.open(self.SOUND, 'rb')
+        p = pyaudio.PyAudio()
+
+        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()), channels=wf.getnchannels(), rate=wf.getframerate(), output=True)
+        data = wf.readframes(CHUNK)
+        while data != '':
+            stream.write(data)
+            data = wf.readframes(CHUNK)
+
+        stream.stop_stream()
+        stream.close()
+        p.terminate()

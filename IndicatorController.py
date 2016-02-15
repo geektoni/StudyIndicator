@@ -87,6 +87,7 @@ class IndicatorController(object):
         clock = self.timer.getElapsedTime()
         if (clock[0] == max):
             self.indicator.throwNotification(message)
+            self.indicator.playSound()
             return False
 
         time = self.sanitizeTime(clock)
@@ -103,11 +104,13 @@ class IndicatorController(object):
         if (clock[0] == max and max == self.timer.getPhaseDuration()):
             self.indicator.throwNotification("Working Phase is finished!")
             self.timer.setStartTime()
+            self.indicator.playSound()
             self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, self.timer.getBreakDuration(), counter+1, maxCounter)
             return False
         elif (clock[0] == max and max == self.timer.getBreakDuration()):
             self.indicator.throwNotification("Break is finished! Back to work!")
             self.timer.setStartTime()
+            self.playSound()
             self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, self.timer.getPhaseDuration(), counter+1, maxCounter)
             return False
 
