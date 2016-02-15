@@ -89,19 +89,8 @@ class IndicatorController(object):
             self.indicator.throwNotification(message)
             return False
 
-        minutes = ""
-        if (clock[0] < 10):
-            minutes = "0"+str(clock[0])
-        else:
-            minutes = str(clock[0])
-
-        seconds = ""
-        if (clock[1]%60 < 10):
-            seconds = "0"+str(clock[1]%60)
-        else:
-            seconds = str(clock[1]%60)
-
-        self.indicator.changeLabel(minutes, seconds)
+        time = self.sanitizeTime(clock)
+        self.indicator.changeLabel(time[0], time[1])
         return True
 
     # This function is similar to labelChanger, but it is design specifically
@@ -121,17 +110,22 @@ class IndicatorController(object):
             self.timer.setStartTime()
             self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, self.timer.getPhaseDuration(), counter+1, maxCounter)
             return False
-        minutes = ""
-        if (clock[0] < 10):
-            minutes = "0"+str(clock[0])
-        else:
-            minutes = str(clock[0])
 
-        seconds = ""
-        if (clock[1]%60 < 10):
-            seconds = "0"+str(clock[0]%60)
-        else:
-            seconds = str(clock[1]%60)
-
-        self.indicator.changeLabel(minutes, seconds)
+        time = self.sanitizeTime(clock)
+        self.indicator.changeLabel(time[0], time[1])
         return True
+
+    # This function return the correct time representation.
+    def sanitizeTime(self, time):
+        minutes = ""
+        if (time[0] < 10):
+            minutes = "0"+str(time[0])
+        else:
+            minutes = str(time[0])
+        seconds = ""
+        if (time[1]%60 < 10):
+            seconds = "0"+str(time[1]%60)
+        else:
+            seconds = str(time[1]%60)
+
+        return (minutes, seconds)
