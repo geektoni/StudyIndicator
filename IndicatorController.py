@@ -87,6 +87,8 @@ class IndicatorController(object):
         clock = self.timer.getElapsedTime()
         if (clock[0] == max):
             self.indicator.throwNotification(message)
+            self.indicator.changeLabel("", "")
+            self.indicator.enableMenuItems()
             self.indicator.playSound()
             return False
 
