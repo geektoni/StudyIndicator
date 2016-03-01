@@ -73,6 +73,11 @@ class Indicator(object):
     def disableMenuItem(self, item):
         item.set_sensitive(False)
 
+    def rebuildMenu(self):
+        self.menu = Gtk.Menu()
+        self.generateMenu()
+        self.view.set_menu(self.menu)
+
     # Disable all indicator menu items apart from the selected one
     def disableMenuItems(self, item):
         for e in self.menu.get_children():

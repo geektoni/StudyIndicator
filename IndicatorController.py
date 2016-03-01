@@ -26,7 +26,7 @@ class IndicatorController(object):
         trigger.connect('activate', self.stopPhase)
         self.indicator.disableMenuItems(trigger)
         self.timer.setStartTime()
-        self.eventSource = GObject.timeout_add(1000, self.labelChanger, self.timer.getPhaseDuration(), "Working Phase is finished!")
+        self.eventSource = GObject.timeout_add(1000, self.labelChanger, self.timer.getPhaseDuration(), "Working Phase is finished!", trigger, "Start Phase")
 
     # Stop the phase and reset the indicator label. It also
     # enable all the indicator menu items
@@ -47,7 +47,7 @@ class IndicatorController(object):
         trigger.connect('activate', self.stopBreak)
         self.indicator.disableMenuItems(trigger)
         self.timer.setStartTime()
-        self.eventSource = GObject.timeout_add(1000, self.labelChanger, self.timer.getBreakDuration(), "Break is finished! Back to work!")
+        self.eventSource = GObject.timeout_add(1000, self.labelChanger, self.timer.getBreakDuration(), "Break is finished! Back to work!", trigger, "Start Break")
 
     # Stop break phase. It is the same of stopPhase
     def stopBreak(self, trigger):
@@ -69,7 +69,7 @@ class IndicatorController(object):
         trigger.connect('activate', self.stopSession)
         self.indicator.disableMenuItems(trigger)
         self.timer.setStartTime()
-        self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, self.timer.getPhaseDuration(), 0, self.timer.getSessionDuration())
+        self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, trigger, self.timer.getPhaseDuration(), 0, self.timer.getSessionDuration())
 
     def stopSession(self, trigger):
         trigger.set_label("Start Session")
@@ -83,12 +83,12 @@ class IndicatorController(object):
     # This function change the label of the indicator, and it is used
     # inside a GObject loop. When the time arrive to a max, it will
     # return False instead of True
-    def labelChanger(self, max, message):
+    def labelChanger(self, max, message, trigger, new_label):
         clock = self.timer.getElapsedTime()
         if (clock[0] == max):
             self.indicator.throwNotification(message)
-            self.indicator.changeLabel("", "")
-            self.indicator.enableMenuItems()
+            self.indicator.getView().set_label("", "")
+            self.indicator.rebuildMenu()
             self.indicator.playSound()
             return False
 
@@ -99,21 +99,26 @@ class IndicatorController(object):
     # This function is similar to labelChanger, but it is design specifically
     # for the session operation. It will call continuously the same function
     # as long as the counter is less than sessionDuration
-    def labelChangerSession(self, max, counter, maxCounter):
+    def labelChangerSession(self, trigger, max, counter, maxCounter):
         clock = self.timer.getElapsedTime()
         if (counter==maxCounter):
+            self.indicator.throwNotification("Session is finished!")
+            self.indicator.getView().set_label("", "")
+            self.indicator.rebuildMenu()
+            trigger.set_label("Start Session")
+            self.indicator.playSound()
             return False
         if (clock[0] == max and max == self.timer.getPhaseDuration()):
             self.indicator.throwNotification("Working Phase is finished!")
             self.timer.setStartTime()
             self.indicator.playSound()
-            self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, self.timer.getBreakDuration(), counter+1, maxCounter)
+            self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, trigger, self.timer.getBreakDuration(), counter+1, maxCounter)
             return False
         elif (clock[0] == max and max == self.timer.getBreakDuration()):
             self.indicator.throwNotification("Break is finished! Back to work!")
             self.timer.setStartTime()
             self.playSound()
-            self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, self.timer.getPhaseDuration(), counter+1, maxCounter)
+            self.eventSource = GObject.timeout_add(1000, self.labelChangerSession, trigger, self.timer.getPhaseDuration(), counter+1, maxCounter)
             return False
 
         time = self.sanitizeTime(clock)
