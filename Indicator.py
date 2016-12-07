@@ -2,12 +2,15 @@
 import os
 
 # Graphic libraries
+import gi
+gi.require_version('AppIndicator3', '0.1')
+gi.require_version('Notify', '0.7')
 from gi.repository import AppIndicator3
 from gi.repository import Notify
 from gi.repository import Gtk
 
 # Audio library
-import pyaudio
+#import pyaudio
 import wave
 
 # Controller
@@ -22,7 +25,7 @@ class Indicator(object):
     def __init__(self):
         """Initialize the indicator and build the menu"""
         self.APPID = "Study Timer Indicator"
-        self.ICON = os.path.abspath('stopwatch2.png')
+        self.ICON = os.path.abspath('/home/uriel/Github/StudyIndicator/stopwatch2.png')
         self.SOUND = "Sound.wav"
         self.view = AppIndicator3.Indicator.new(self.APPID, self.ICON, AppIndicator3.IndicatorCategory.SYSTEM_SERVICES)
         self.view.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
