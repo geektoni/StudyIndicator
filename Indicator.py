@@ -1,5 +1,6 @@
 # System libraries
 import os
+from pathlib import Path
 
 # Graphic libraries
 import gi
@@ -25,7 +26,7 @@ class Indicator(object):
     def __init__(self):
         """Initialize the indicator and build the menu"""
         self.APPID = "Study Timer Indicator"
-        self.ICON = os.path.abspath('/home/uriel/Github/StudyIndicator/stopwatch2.png')
+        self.ICON = os.path.abspath(str(Path.home())+'/Github/StudyIndicator/stopwatch2.png')
         self.SOUND = "Sound.wav"
         self.view = AppIndicator3.Indicator.new(self.APPID, self.ICON, AppIndicator3.IndicatorCategory.SYSTEM_SERVICES)
         self.view.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
